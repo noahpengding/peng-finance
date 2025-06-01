@@ -26,7 +26,7 @@ variables:
 test-x64:
   <<: *test-build
   script:
-    - docker build --platform linux/amd64 -t $IMAGE:$VERSION-nightly -f server/Dockerfile_slim server/
+    - docker build --platform linux/amd64 -t $IMAGE:$VERSION-nightly -f Dockerfile .
     - docker push $IMAGE:$VERSION-nightly
   tags:
     - docker
@@ -35,7 +35,7 @@ test-x64:
 build-x64:
   <<: *prod-build
   script:
-    - docker build --platform linux/amd64 -t $IMAGE:$VERSION -f server/Dockerfile_slim server/
+    - docker build --platform linux/amd64 -t $IMAGE:$VERSION -f Dockerfile .
     - docker tag $IMAGE:$VERSION $IMAGE:latest
     - docker push $IMAGE:$VERSION
     - docker push $IMAGE:latest
@@ -45,7 +45,7 @@ build-x64:
 build-arm:
   <<: *prod-build
   script:
-    - docker build --platform linux/arm64 -t $IMAGE:$VERSION-arm -f server/Dockerfile_slim server/
+    - docker build --platform linux/arm64 -t $IMAGE:$VERSION-arm -f Dockerfile .
     - docker tag $IMAGE:$VERSION-arm $IMAGE:latest-arm
     - docker push $IMAGE:$VERSION-arm
     - docker push $IMAGE:latest-arm
