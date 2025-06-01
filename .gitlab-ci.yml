@@ -1,0 +1,53 @@
+stages:
+  - test
+  - build
+
+variables:
+  IMAGE: $CI_REGISTRY/peng-bot/peng-finance
+  VERSION: v0.1.0
+
+# Template for test builds (non-main branches)
+.test-build-template: &test-build
+  image: docker:23.0.6-dind
+  stage: test
+  before_script:
+    - docker login -u $CI_REGISTRY_USER -p $CI_REGISTRY_PASSWORD $CI_REGISTRY
+
+# Template for production builds (main branch)
+.prod-build-template: &prod-build
+  image: docker:23.0.6-dind
+  stage: build
+  before_script:
+    - docker login -u $CI_REGISTRY_USER -p $CI_REGISTRY_PASSWORD $CI_REGISTRY
+  rules:
+    - if: $CI_COMMIT_BRANCH == "main"
+
+# Server test build (x86)
+test-x64:
+  <<: *test-build
+  script:
+    - docker build --platform linux/amd64 -t $IMAGE:$VERSION-nightly -f server/Dockerfile_slim server/
+    - docker push $IMAGE:$VERSION-nightly
+  tags:
+    - docker
+
+# Server production builds
+build-x64:
+  <<: *prod-build
+  script:
+    - docker build --platform linux/amd64 -t $IMAGE:$VERSION -f server/Dockerfile_slim server/
+    - docker tag $IMAGE:$VERSION $IMAGE:latest
+    - docker push $IMAGE:$VERSION
+    - docker push $IMAGE:latest
+  tags:
+    - docker
+
+build-arm:
+  <<: *prod-build
+  script:
+    - docker build --platform linux/arm64 -t $IMAGE:$VERSION-arm -f server/Dockerfile_slim server/
+    - docker tag $IMAGE:$VERSION-arm $IMAGE:latest-arm
+    - docker push $IMAGE:$VERSION-arm
+    - docker push $IMAGE:latest-arm
+  tags:
+    - docker-arm
