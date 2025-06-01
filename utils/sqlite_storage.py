@@ -178,6 +178,7 @@ def create_user(username, hashed_password, email, api_token):
     user = User(username=username, password=hashed_password, email=email, api_token=api_token)
     session.add(user)
     session.commit()
+    upload_file(Config.LOCAL_DB_PATH, Config.DB_S3_PATH + "main.db")
     session.close()
 
 

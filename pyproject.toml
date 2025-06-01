@@ -1,6 +1,6 @@
 [project]
 name = "peng-finance"
-version = "0.1.0"
+version = "0.1.1"
 description = "A Python application for personal finance management."
 authors = [{ name = "Noah Ding", email = "dingyipeng@dingyipeng.com" }]
 dependencies = [
