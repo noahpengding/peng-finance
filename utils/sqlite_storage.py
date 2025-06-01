@@ -56,7 +56,6 @@ class CategoryMapping(Base):
 def initialize_db():
     logger.debug("Creating database tables via ORM...")
     Base.metadata.create_all(bind=engine)
-    upload_file(Config.LOCAL_DB_PATH, Config.DB_S3_PATH + "main.db")
     logger.info("Database initialized.")
 
 # Session utility
@@ -82,7 +81,7 @@ def save_input_mappings(account, mappings: dict):
         session.add(im)
     session.commit()
     session.close()
-    upload_file(Config.LOCAL_DB_PATH, Config.DB_S3_PATH + "main.db")
+    upload_file(Config.LOCAL_DB_PATH, Config.DB_S3_PATH + "/main.db")
     logger.info(f"Saved input mappings for account {account}")
 
 # Category mapping functions
@@ -123,7 +122,7 @@ def save_category_mapping(orig_cat, merchant, description, target_category):
     ).update({Detail.category: target_category})
     session.commit()
     session.close()
-    upload_file(Config.LOCAL_DB_PATH, Config.DB_S3_PATH + "main.db")
+    upload_file(Config.LOCAL_DB_PATH, Config.DB_S3_PATH + "/main.db")
     logger.info(f"Saved category mapping for {orig_cat}|{merchant}|{description}")
 
 # Detail functions
@@ -143,7 +142,7 @@ def remove_duplicates(username):
         session.query(Detail).filter(Detail.id.in_(dup_ids)).delete(synchronize_session=False)
         session.commit()
     session.close()
-    upload_file(Config.LOCAL_DB_PATH, Config.DB_S3_PATH + "main.db")
+    upload_file(Config.LOCAL_DB_PATH, Config.DB_S3_PATH + "/main.db")
     logger.info(f"Removed {len(dup_ids)} duplicate transactions for user {username}")
     return len(dup_ids)
 
@@ -168,7 +167,7 @@ def save_transactions(username, account, df, mappings):
         session.add(detail)
     session.commit()
     session.close()
-    upload_file(Config.LOCAL_DB_PATH, Config.DB_S3_PATH + "main.db")
+    upload_file(Config.LOCAL_DB_PATH, Config.DB_S3_PATH + "/main.db")
     logger.info(f"Saved {len(df)} transactions for user {username} and account {account}")
 
 # User functions
@@ -178,7 +177,7 @@ def create_user(username, hashed_password, email, api_token):
     user = User(username=username, password=hashed_password, email=email, api_token=api_token)
     session.add(user)
     session.commit()
-    upload_file(Config.LOCAL_DB_PATH, Config.DB_S3_PATH + "main.db")
+    upload_file(Config.LOCAL_DB_PATH, Config.DB_S3_PATH + "/main.db")
     session.close()
 
 
@@ -195,7 +194,7 @@ def update_user_token(username, token):
     session = get_session()
     session.query(User).filter(User.username == username).update({User.api_token: token})
     session.commit()
-    upload_file(Config.LOCAL_DB_PATH, Config.DB_S3_PATH + "main.db")
+    upload_file(Config.LOCAL_DB_PATH, Config.DB_S3_PATH + "/main.db")
     session.close()
 
 def get_all_accounts():

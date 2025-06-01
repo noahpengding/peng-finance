@@ -22,6 +22,6 @@ def download_db():
 def upload_file(local_path: str, object_name: str):
     try:
         client.fput_object(Config.MINIO_BUCKET, object_name, local_path)
-        logger.info(f"Uploaded {local_path} to {Config.MINIO_BUCKET}/{Config.DB_S3_PATH}/{object_name}")
+        logger.info(f"Uploaded {local_path} to {object_name} in MinIO bucket {Config.MINIO_BUCKET}")
     except Exception as e:
         logger.error(f"Failed to upload file: {e}")
