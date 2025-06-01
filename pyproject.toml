@@ -1,0 +1,33 @@
+[project]
+name = "peng-finance"
+version = "0.1.0"
+description = "A Python application for personal finance management."
+authors = [{ name = "Noah Ding", email = "dingyipeng@dingyipeng.com" }]
+dependencies = [
+    "streamlit",
+    "pandas",
+    "openpyxl", # For Excel export
+    "minio",
+    "PyJWT",
+    "python-dotenv", # For managing environment variables
+    "sqlalchemy", # For database interactions
+    "currencyconverter>=0.18.6",
+]
+requires-python = ">=3.12"
+
+[build-system]
+requires = ["hatchling"]
+build-backend = "hatchling.build"
+
+[tool.hatch.build.targets.wheel]
+packages = ["config", "pages", "services", "utils"]
+
+[tool.rye]
+managed = true
+dev-dependencies = []
+
+[tool.hatch.metadata]
+allow-direct-references = true
+
+[tool.uv]
+dev-dependencies = []

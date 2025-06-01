@@ -1,0 +1,69 @@
+Generate a brand-new Python application called "peng-finance" that will provide a user friendly experience in reporting and managing my personal financial situations
+
+# 1. Project setup
+    - Use UV to manage dependencies and virtual environments; Using pyproject.toml
+    - Use the latest Python 3.12
+    - Initialize a git repository with main as default branch
+    - Include Dockerfile, and proper dockerignore, gitignore
+    - Use Flat Layout
+# 2. Project Design
+    - Use Sqlite as backend database: The Sqlite file will be stored in a location in minio S3 and it will be download on start up based on a path given by the environment variable
+    - Including following tables in db:
+      - Detail: Basic financial reporting page with following columns:
+        - id
+        - username
+        - account
+        - date
+        - post date
+        - category
+        - original category
+        - merchant name
+        - description
+        - amount
+      - User: User Management
+        - id
+        - username
+        - password
+        - email
+        - api_token
+      - Input mapping: Mapping the input file to fields in this db
+        - account
+        - source
+        - target
+      - Category Mapping: Mapping Category based on date, original category, merchant name, and description
+        - original category
+        - merchant name
+        - description
+        - targe category
+    - Use Streamlit as frontend with the following pages: 
+      - Home Page shows a table of detail with filter:
+        - Following field will be shown: account, post date, category, merchant name, description, amount
+        - Following field will be filter: account, post date, category, merchant name
+        - A button to download current table layout as xlsx file
+        - A button to remove duplication transactions with exactly same information
+      - Input page to input files:
+        - A dropdown to select account or create a new one
+        - A button to upload csv files
+        - One lines shows the field is needed in the db
+        - One line to select the column name in the csv file uploaded with option to manual input a character
+        - If there is a mapping for this account, load that in the second line for the user to review
+        - A save button in the buttom will do following things:
+          - Save the mapping to input mapping table
+          - upload the csv file to minio s3 with location given by the environment variable
+          - Calculating the Category filed based on category mapping, if not showing in the category mapping, the category field will be empty;
+          - use the mapping to save the input data to the db, if a coluumn name is spcific then use data from that collumn, if a specific character is used, then use that char to that filed
+      - Category page to manage category mapping
+        - Show all trasactions that didn't have category with a dropdown on the right most to select category for it
+        - The Dropdown should have a option to let the user enter a new category themselves
+        - After a category is select, a save button will shows on the right of that category mapping that do following things:
+          - save that category mapping to the db
+          - update all transactions category in detail table that match that category mapping
+      - A login page to check username and password and save a JWT token on client side with JWT password from env
+      - A signup page that can create user; One admin password specific in environment variable is needed to create a new user
+# 3. Rules
+    - Use a centralized config/configure.py file to manage all environment variables and configurations
+    - The minio s3 access key and secrete key will be input in that config/configure.py with environment variable
+    - Use a centralized utils/output_log.py file for logging
+    - Use a centralized utils/minio_storage.py & utils/sqlite_storage.py to store and read from minio and sqlite
+    - Use muti threading as much as possible
+    - Use Light Green or Green seriers color for the app
