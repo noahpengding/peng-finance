@@ -2,12 +2,9 @@
 Home Page - Frontend UI for displaying transactions with filters
 """
 import streamlit as st
-import pandas as pd
-from io import BytesIO
 from services.transaction_service import TransactionService
 from services.navigation_service import NavigationService
 from utils.sqlite_storage import remove_duplicates
-from utils.output_log import logger
 
 
 def main():

@@ -3,7 +3,6 @@ Signup Page - Frontend UI for user registration
 """
 import streamlit as st
 from services.auth_service import AuthService
-from services.navigation_service import NavigationService
 
 
 def main():

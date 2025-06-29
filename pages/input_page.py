@@ -2,7 +2,6 @@
 Input Page - Frontend UI for uploading and mapping transaction data
 """
 import streamlit as st
-import pandas as pd
 from services.input_service import InputService
 from services.navigation_service import NavigationService
 from utils.output_log import logger
@@ -92,7 +91,7 @@ def main():
                             manual_options,
                             index=manual_options.index(manual_default) if manual_default in manual_options else 0,
                             key=f"manual_select_{field}",
-                            help=f"Use a fixed value for all transactions"
+                            help="Use a fixed value for all transactions"
                         )
                         
                         if manual_selection == '<manual>':
@@ -109,7 +108,7 @@ def main():
                             f'Use fixed value for {field}',
                             value=bool(default_manual and not selected_columns),
                             key=f"use_manual_{field}",
-                            help=f"Check to enter a fixed value for all transactions"
+                            help="Check to enter a fixed value for all transactions"
                         )
                         
                         if use_manual:
@@ -117,7 +116,7 @@ def main():
                                 f'Enter fixed value for {field}',
                                 value=default_manual,
                                 key=f"manual_{field}",
-                                help=f"This value will be used for all transactions"
+                                help="This value will be used for all transactions"
                             )
                         else:
                             manual_value = ''
