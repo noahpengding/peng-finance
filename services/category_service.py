@@ -18,7 +18,7 @@ class CategoryService:
                 Detail.id, Detail.original_category, Detail.merchant_name, Detail.description
             ).filter(
                 Detail.username == username,
-                (Detail.category is None) | (Detail.category == '')
+                (Detail.category == '')
             ).all()
             
             return pd.DataFrame(rows, columns=['id', 'original_category', 'merchant_name', 'description'])

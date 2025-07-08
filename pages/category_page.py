@@ -108,7 +108,7 @@ def main():
             selected_transactions = st.multiselect(
                 'Select transactions',
                 options=df['id'].tolist(),
-                format_func=lambda x: f"ID {x}: {df[df['id']==x]['merchant_name'].iloc[0]} - {df[df['id']==x]['description'].iloc[0][:50]}..."
+                format_func=lambda x: f"ID {x}: {df[df['id']==x]['merchant_name'].iloc[0]}"
             )
             
             if st.button('Apply to Selected', key='bulk_save') and bulk_category and selected_transactions:

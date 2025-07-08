@@ -59,11 +59,11 @@ class InputService:
         finally:
             os.unlink(temp_file.name)
     
-    def transaction_amount_conversion(amount, currency):
+    def transaction_amount_conversion(amount, currency, account_type):
         from currency_converter import CurrencyConverter
-        debit_credit = 1
+        positive_negative = 1
         if amount[0] == '-':
-            debit_credit = -1
+            positive_negative = -1
             amount = amount[1:]
         if amount[0] in ['$', '€', '£', '¥']:
             amount = amount[1:]
@@ -74,8 +74,10 @@ class InputService:
             return 0.0
         if currency != 'CAD':
             amount = CurrencyConverter().convert(amount, currency, 'CAD')
-        return amount * debit_credit
-
+        credit_debit = 1
+        if account_type == 'credit':
+            credit_debit = -1
+        return amount * positive_negative * credit_debit
 
     @staticmethod
     def _process_mappings(df: pd.DataFrame, mappings: dict, account: str, username: str) -> list:
@@ -99,7 +101,8 @@ class InputService:
                 elif field == 'amount':
                     amount = str(row.get(source, '0'))
                     currency = row.get('currency', 'CAD')
-                    transaction[field] = InputService.transaction_amount_conversion(amount, currency)
+                    account_type = mappings.get('account_type', 'debit')
+                    transaction[field] = InputService.transaction_amount_conversion(amount, currency, account_type)
                 elif source in df.columns:
                     # Single column selected
                     transaction[field] = row[source]

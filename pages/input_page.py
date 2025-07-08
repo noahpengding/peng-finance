@@ -40,7 +40,7 @@ def main():
             mappings = {}
             saved = InputService.get_saved_mappings(account)
             
-            required_fields = ['date', 'post_date', 'original_category', 'merchant_name', 'description', 'currency', 'amount']
+            required_fields = ['account_type', 'date', 'post_date', 'original_category', 'merchant_name', 'description', 'currency', 'amount']
             
             # Create mapping interface
             col1, col2 = st.columns(2)
@@ -67,6 +67,17 @@ def main():
                     default_manual = ''
                 
                 with col1 if i % 2 == 0 else col2:
+                    if field == 'account_type':
+                        # Account type selection
+                        account_type = st.selectbox(
+                            'Select Account Type',
+                            ['debit', 'credit'],
+                            index=0 if saved_value == 'debit' else 1,
+                            key=f"account_type_{field}",
+                            help="Select the type of account for this mapping"
+                        )
+                        mappings[field] = account_type
+                        continue
                     # Multi-select for CSV columns
                     selected_columns = st.multiselect(
                         f'Select column(s) for {field}',
